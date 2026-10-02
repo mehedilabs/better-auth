@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { Link, Button } from "@heroui/react";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   const { data: session } = authClient.useSession();
   console.log(session);
@@ -21,6 +22,14 @@ export default function Navbar() {
       },
     });
   };
+
+  const navItems = [
+    { name: "Home", href: "/" },
+    { name: "Features", href: "/features" },
+    { name: "Dashboard", href: "/dashboard" },
+  ];
+
+  const isActive = (path) => pathname === path;
 
   return (
     <nav className="sticky top-0 z-40 w-full border-b border-separator bg-background/70 backdrop-blur-lg">
@@ -58,24 +67,36 @@ export default function Navbar() {
           </button>
           <div className="flex items-center gap-3">
             <Link href="/" className="font-bold">
-              Home
+              Better Auth
             </Link>
           </div>
         </div>
         <ul className="hidden items-center gap-4 md:flex">
-          <li>
-            <Link href="#">Features</Link>
-          </li>
-          <li>
-            <Link
-              href="#"
-              className="font-medium text-accent"
-              aria-current="page"
-            >
-              Dashboard
-            </Link>
-          </li>
-          <li>{session?.user && <Link href="/profile">Profile</Link>}</li>
+          {navItems.map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className={isActive(item.href) ? "font-medium text-accent" : ""}
+                aria-current={isActive(item.href) ? "page" : undefined}
+              >
+                {item.name}
+              </Link>
+            </li>
+          ))}
+
+          {session?.user && (
+            <li>
+              <Link
+                href="/profile"
+                className={
+                  isActive("/profile") ? "font-medium text-accent" : ""
+                }
+                aria-current={isActive("/profile") ? "page" : undefined}
+              >
+                Profile
+              </Link>
+            </li>
+          )}
         </ul>
         <div className="hidden items-center gap-4 md:flex">
           {session?.user ? (
