@@ -75,9 +75,7 @@ export default function Navbar() {
               Dashboard
             </Link>
           </li>
-          <li>
-            <Link href="#">Profile</Link>
-          </li>
+          <li>{session?.user && <Link href="/profile">Profile</Link>}</li>
         </ul>
         <div className="hidden items-center gap-4 md:flex">
           {session?.user ? (
