@@ -18,7 +18,7 @@ const SignIn = () => {
     password: data.password,
     callbackURL: "/",
 });
-console.log(data, error);
+console.log(signInData, error);
   };
 
   return (
